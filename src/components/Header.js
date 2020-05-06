@@ -13,11 +13,11 @@ const Header = () => {
         <div className="panel-body" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px', margin: '20px' }}>
           <IconButton style={{  borderRadius: '0', padding:'0 5px' }} variant="contained" color="primary" onClick={() => {
           }}>
-            <Link to="/map" className="linktag"><RoomIcon></RoomIcon></Link>
+            <Link to="/covid19/map" className="linktag"><RoomIcon></RoomIcon></Link>
           </IconButton>
           <IconButton style={{   borderRadius: '0', padding:'0 5px' }} variant="contained" color="primary" onClick={() => {
           }}>
-            <Link to="/stats" className="linktag"><TimelineIcon></TimelineIcon></Link>
+            <Link to="/covid19/stats" className="linktag"><TimelineIcon></TimelineIcon></Link>
           </IconButton>
         </div>
       </div>
