@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 
 const CovidMap = ({onPatientMarkerClicked, patients,currentPatient}) => {
-    return <Map style={{height:window.innerHeight*0.8}} center={currentPatient ?[currentPatient.lat, currentPatient.lng]: [10.762887, 106.6800684]} zoom={13}>
+    return <Map center={currentPatient ?[currentPatient.lat, currentPatient.lng]: [10.762887, 106.6800684]} zoom={13}>
         <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.osm.org/{z}/{x}/{y}.png   "

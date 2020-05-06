@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 const PatientInfo = ({name, address, note, verifyDate}) => {
     return <ul style={{paddingRight:'20px'}}>

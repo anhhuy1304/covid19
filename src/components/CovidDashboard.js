@@ -6,7 +6,6 @@ import ListPatient from "./ListPatient";
 import Container from "react-bootstrap/Container";
 import CovidMap from "./CovidMap";
 import SeekBar from "./SeekBar";
-import Button from '@material-ui/core/Button';
 import moment from 'moment';
 import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -26,25 +25,25 @@ const CovidDashboard = (props) => {
         reft[patients.indexOf(patient)].scrollIntoView({ behavior: "smooth" })
 
     }
-    const choosePatient = (patient) =>{
+    const choosePatient = (patient) => {
         setCurrentPatient(patient);
     }
-    const handleChangeDate =(event, newValue) => {
+    const handleChangeDate = (event, newValue) => {
         const selectedDate = moment(newValue).format('YYYY-MM-DDTHH:mm:ss');
-        if(patients){
-            setcurrentListPatient([...patients].filter(item=> (item.verifyDate <= selectedDate && item.verifyDate >= startDate)))
-            if(selectedDate !== valueSeekBar){
+        if (patients) {
+            setcurrentListPatient([...patients].filter(item => (item.verifyDate <= selectedDate && item.verifyDate >= startDate)))
+            if (selectedDate !== valueSeekBar) {
                 setValueSeekBar(selectedDate);
             }
         }
     }
 
     useEffect(() => {
-        fetch("https://maps.vnpost.vn/apps/covid19/api/patientapi/list")
+        fetch("https://cors-anywhere.herokuapp.com/https://maps.vnpost.vn/apps/covid19/api/patientapi/list")
             .then(res => res.json())
             .then(
                 (result) => {
-                    setPatients(result.data.sort((a,b)=> (a.verifyDate > b.verifyDate) ? -1 : ((a.verifyDate < b.verifyDate) ? 1 : 0)));
+                    setPatients(result.data.sort((a, b) => (a.verifyDate > b.verifyDate) ? -1 : ((a.verifyDate < b.verifyDate) ? 1 : 0)));
                     setReft(new Array(result.data.length).fill(React.createRef()));
                 },
                 (error) => {
@@ -54,56 +53,80 @@ const CovidDashboard = (props) => {
 
     useEffect(() => {
         let timer = null;
-        if(isPlay){
+        if (isPlay) {
             timer = setTimeout(() => {
-                const epoch = moment(valueSeekBar,moment.ISO_8601).valueOf();
+                const epoch = moment(valueSeekBar, moment.ISO_8601).valueOf();
                 setValueSeekBar(moment(epoch + 86400000).format('YYYY-MM-DDTHH:mm:ss'))
-                setcurrentListPatient([...patients].filter(item=> (item.verifyDate <= moment(epoch).format('YYYY-MM-DDTHH:mm:ss') && item.verifyDate >= startDate)))
-              }, 200);
+                setcurrentListPatient([...patients].filter(item => (item.verifyDate <= moment(epoch).format('YYYY-MM-DDTHH:mm:ss') && item.verifyDate >= startDate)))
+            }, 200);
         }
         return () => {
-          clearTimeout(timer);
+            clearTimeout(timer);
         };
-      }, [valueSeekBar,isPlay]);
-    return <Container fluid style={{ padding: 0 }}>
-    <Container fluid style={{ border: '3px solid #333', padding: 0 }} >
-        <Row style={{width:'100%'}}>
-            <Col xs={9} style={{ padding: 0 }}> <CovidMap currentPatient={currentPatient}  patients={currentListPatient} onPatientMarkerClicked={patientMarkerClickedHandler} /></Col>
-            <Col xs={3} style={{ borderLeft: '3px solid #333', padding: 0 }}>
-                <div style={{ height: '50%', maxHeight: '386px' }}>
-                    <h3 style={{ textAlign: "center" }}>List patients</h3>
-                    <Row style={{ positon:'fixed', width: '95%', paddingRight: '10px', marginLeft:'3px', backgroundColor: '#d0d0d0' }}>
-                        <Col xs={6} style={{ textAlign: 'center' }}>Number patient</Col>
-                        <Col xs={6} style={{ textAlign: 'center' }} >Date</Col>
-                    </Row>
-                    {(reft) && <ListPatient patients={currentListPatient} reft={reft} choosePatient={choosePatient} currentPatient={currentPatient}/>}
+    }, [valueSeekBar, isPlay]);
+    return <Container fluid>
+
+        <div className="chart-monitor row" style={{margin:'0 20px'}} >
+            <div id="chart-line" style={{paddingLeft:0}} className="col-12 col-lg-8 col-xl-8">
+                <div className="panel">
+                    <div className="panel-body" style={{ minHeight: '400px' }}>
+                        <CovidMap currentPatient={currentPatient} patients={currentListPatient} onPatientMarkerClicked={patientMarkerClickedHandler} />
+                    </div>
                 </div>
-                <div style={{ borderTop: '3px solid #333', height: '50%' }}>
-                    <h3 style={{ textAlign: "center" }}>Patient Infomation</h3>
-                    {currentPatient &&
-                        <PatientInfo name={currentPatient.name} style={{ borderBottom: '3px solid #333', height: '50%' }} address={currentPatient.address} note={currentPatient.note}
-                            verifyDate={currentPatient.verifyDate} />}
+            </div>
+
+            <div id="chart-pie" className="col-12 col-lg-4 col-xl-4" style={{paddingRight:0, height: '400px'}}>
+                <div className="row quickInfo" style={{paddingBottom:'10px'}}>
+                    <div className="panel" style={{height:'100%'}}>
+                        <div className="panel-body">
+                            <h3 style={{ textAlign: "center" }}>List patients</h3>
+                            <Row style={{ margin: '0', backgroundColor: '#d0d0d0' }}>
+                                <Col xs={6} style={{ textAlign: 'center' }}>Number patient</Col>
+                                <Col xs={6} style={{ textAlign: 'center' }} >Date</Col>
+                            </Row>
+                            {(reft) && <ListPatient patients={currentListPatient} reft={reft} choosePatient={choosePatient} currentPatient={currentPatient} />}
+                        </div>
+                    </div>
                 </div>
-            </Col>
-        </Row>
-    </Container>
-        <div>
-            {
-            patients[0] && <SeekBar timeFrom={startDate} timeTo={patients[0].verifyDate} valueSeekBar={valueSeekBar} handleChange={handleChangeDate}></SeekBar>
-            }
-        </div>
-        <div style={{display:'flex', justifyContent:'center'}}>
-            <IconButton style={{margin: '10px', borderRadius:'25% 25%'}} variant="contained" color="primary" onClick={()=>{setIsPlay(!isPlay);}}> 
-            {isPlay?<PlayArrowIcon></PlayArrowIcon>:<PauseIcon></PauseIcon>}
-            </IconButton>
-            <IconButton style={{margin: '10px', borderRadius:'25% 25%'}} variant="contained" color="primary" onClick={()=>{
-                setIsPlay(false);
-                setValueSeekBar(startDate)
-            }}>
-                <RotateLeftIcon></RotateLeftIcon>
-            </IconButton>
+                <div className="row quickInfo" style={{paddingTop:'10px'}}>
+                    <div className="panel" style={{ paddingLeft: '0', paddingRight: '0' }} >
+                        <div className="panel-body " style={{ padding: '0' }}>
+                            <h3 style={{ textAlign: "center" }}>Patient Infomation</h3>
+                            {currentPatient &&
+                                <PatientInfo name={currentPatient.name} style={{ borderBottom: '3px solid #333', height: '50%' }} address={currentPatient.address} note={currentPatient.note}
+                                    verifyDate={currentPatient.verifyDate} />}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
+
+
+        <div className="chart-monitor" style={{margin:'15px 20px'}}>
+            <div className="col-12 col-lg-12 col-xl-12" style={{paddingRight:0, paddingLeft:0}}>
+                <div className="panel">
+                    <div className="panel-body">
+                        <div style={{minHeight: '30px'}}>
+                            {
+                                patients[0] && <SeekBar timeFrom={startDate} timeTo={patients[0].verifyDate} valueSeekBar={valueSeekBar} handleChange={handleChangeDate}></SeekBar>
+                            }
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <IconButton style={{ margin: '10px', borderRadius: '25% 25%' }} variant="contained" color="primary" onClick={() => { setIsPlay(!isPlay); }}>
+                                {isPlay ? <PlayArrowIcon></PlayArrowIcon> : <PauseIcon></PauseIcon>}
+                            </IconButton>
+                            <IconButton style={{ margin: '10px', borderRadius: '25% 25%' }} variant="contained" color="primary" onClick={() => {
+                                setIsPlay(false);
+                                setValueSeekBar(startDate)
+                            }}>
+                                <RotateLeftIcon></RotateLeftIcon>
+                            </IconButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </Container>
 };
 

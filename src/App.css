@@ -1,7 +1,36 @@
 .App {
   text-align: center;
+  background-color: #f8f7ff;
+  height: 100vh;
 }
 
+.chart-monitor{
+  display: flex;
+}
+.panel-body{
+  box-shadow: 0 5px 15px rgba(57, 98, 254, 0.02), 0 3px 6px rgba(117, 108, 254, 0.12);
+  background-color: white;
+
+}
+
+#chart-pie .panel-body{
+  box-shadow: 0 5px 15px rgba(57, 98, 254, 0.02), 0 3px 6px rgba(117, 108, 254, 0.12) !important;
+  height: 100%;
+}
+.panel-body{
+  height: 100%;
+}
+.quickInfo{
+  height: 50%;
+  margin:0;
+  display: flex;
+}
+.quickInfo .panel{
+  width: 100%
+}
+.quickInfo h1{
+  margin-bottom: 20pxd;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -23,7 +52,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+#chart-line .panel-body{
+  top: -20px;
+}
 .App-link {
   color: #61dafb;
 }

@@ -1,10 +1,10 @@
-import React, {useEffect, useState,useRef} from 'react';
+import React from 'react';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 const ListPatient = ({patients, reft,choosePatient,currentPatient }) => {
   return (
-    <div  style={{ overflowY: 'scroll', height: '75%', margin:'0', padding:'0 10px'}}>
+    <div  style={{ overflowY: 'scroll', height: '60%', margin:'0', padding:'0 10px'}}>
       {
       patients && 
       patients.map((patient, index) => {

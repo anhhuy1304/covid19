@@ -26,7 +26,7 @@ const SeekBar = ({timeFrom, timeTo,valueSeekBar, handleChange}) => {
   const valueLabelFormat= (value)=> {
     return moment(value).format('DD/MM/YYYY')
   }
-    return <div style={{display:'flex', margin:'15px 0', justifyContent:'center'}}>
+    return <div style={{display:'flex', justifyContent:'center'}}>
       <Slider        style={{width:'70%'}}
                      value={ moment(valueSeekBar,moment.ISO_8601).valueOf()}
                      valueLabelFormat={valueLabelFormat}

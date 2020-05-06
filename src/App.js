@@ -1,17 +1,22 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import logo from './logo.svg';
 import './App.css';
-import CovidGoogleMap from "./components/CovidGoogleMap";
-import PatientInfo from "./components/PatientInfo";
 import CovidDashboard from "./components/CovidDashboard";
-
+import ChartDashboard from "./components/ChartDashboard";
+import Header from "./components/Header";
 function App() {
     return (
-        <CovidDashboard/>
+        <Router>
+            <div className="App">
+                <Header/>
+                <Switch>
+                    <Route exact path='/' component={CovidDashboard} />
+                    <Route exact path='/map' component={CovidDashboard} />
+                    <Route exact path='/stats' component={ChartDashboard} />
+                </Switch>
+            </div>
+        </Router>
     );
 }
 
